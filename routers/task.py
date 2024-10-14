@@ -47,8 +47,13 @@ async def create_task(db: Annotated[Session, Depends(get_db)], create_task: Crea
             status_code=status.HTTP_404_NOT_FOUND,
             detail='User was not found'
         )
-    db.execute(insert(Task).values(title=create_task.title, content=create_task.content,
-                                   priority=create_task.priority, slug=slugify(create_task.title)))
+    db.execute(insert(Task).values(
+        title=create_task.title,
+        content=create_task.content,
+        priority=create_task.priority,
+        user_id=user_id,
+        slug=slugify(create_task.title)
+    ))
     db.commit()
     return {
         'status_code': status.HTTP_201_CREATED,
